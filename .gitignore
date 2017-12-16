@@ -2,4 +2,4 @@ rescueSummary
 *.exe
 target/
 
-Journal.*.log
+*.log
