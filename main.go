@@ -1,9 +1,7 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"io"
 	"log"
 	"os"
 	"time"
@@ -22,45 +20,22 @@ func main() {
 	log.SetOutput(logfile)
 	log.Println("----------------")
 
-	forJournals(func(jf journal.JournalFile) {
-		if jf.StartAt().Before(rescueUpdate) {
-			return
-		}
-		r, err := jf.Open()
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		lines, err := readLines(r)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		fmt.Printf("%v\n", lines)
-	})
-}
-
-func forJournals(fn func(journalFile journal.JournalFile)) {
-	files, err := journal.JournalFiles()
+	journalFiles, err := journal.JournalFiles()
 	if err != nil {
 		log.Fatal(err)
 	}
-	for _, file := range files {
-		fn(file)
+
+	for _, jf := range journalFiles {
+		f, err := jf.Open()
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer f.Close()
+
+		events, err := journal.LoadEvents(f)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(events)
 	}
-}
-
-func readLines(r *os.File) ([]string, error) {
-	sc := bufio.NewScanner(r)
-
-	lines := make([]string, 0)
-	for sc.Scan() {
-		lines = append(lines, sc.Text())
-	}
-
-	if err := sc.Err(); err != nil && err != io.EOF {
-		return lines, err
-	}
-
-	return lines, nil
 }
