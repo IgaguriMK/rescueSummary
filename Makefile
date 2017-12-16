@@ -22,9 +22,10 @@ pack: build
 	mkdir -p target/$(PACKANAME)
 	cp $(EXENAME) target/$(PACKANAME)/
 	cp README.md target/$(PACKANAME)/
-	cp pack-resource/setting.json target/$(PACKANAME)/
 
 .PHONY: clean
 clean:
 	- rm $(EXENAME)
 	- rm -rf target
+	- rm error.log
+	- rm summary.html

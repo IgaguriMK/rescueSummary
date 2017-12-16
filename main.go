@@ -25,7 +25,6 @@ func main() {
 	}
 	defer logfile.Close()
 	log.SetOutput(logfile)
-	log.Println("----------------")
 
 	outFile, err := os.Create("summary.html")
 	if err != nil {
