@@ -1,10 +1,10 @@
-% Elite:Dangerous Rescue Summary tool
-% Igaguri
+# Elite:Dangerous Rescue Summary tool
 
 ## 概要
 
 Elite:Dangerousでの救助活動の統計をジャーナルファイルから生成するコマンドラインツールです。
-ダブルクリックで実行されます。
+ダブルクリックで実行すると`summary.html`が生成されます。
+生成されたファイルをブラウザで開くと閲覧できます。
 64ビットWindows専用です
 
 
