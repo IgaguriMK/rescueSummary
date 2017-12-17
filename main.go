@@ -49,19 +49,19 @@ table {
 	border-spacing: 0;
 	text-align: left;
 	line-height: 1.5;
-	border-top: 1px solid #ccc;
-	border-left: 1px solid #ccc;
+	border-top: 1px solid #bbb;
+	border-left: 1px solid #bbb;
 }
 table th {
 	min-width: 5em;
 	padding: 10px;
 	font-weight: bold;
 	vertical-align: top;
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
 	border-top: 1px solid #fff;
 	border-left: 1px solid #fff;
-	background: #eee;
+	background: #ccc;
 }
 table td {
 	min-width: 5em;
@@ -70,6 +70,18 @@ table td {
 	text-align: right;
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
+}
+
+td.daySum {
+	background-color: #eeeeee;
+}
+
+td.stationSum {
+	background-color: #eeeeee;
+}
+
+td.totalSum {
+	background-color: #eedddd;
 }
 </style>
 </head>
@@ -112,17 +124,17 @@ table td {
 		}
 
 		totalSum += daySum
-		fmt.Fprintf(outFile, "<td>%d</td> ", daySum)
+		fmt.Fprintf(outFile, "<td class=\"daySum\">%d</td> ", daySum)
 		fmt.Fprint(outFile, dayOut.String())
 
 		fmt.Fprintln(outFile, "</tr>")
 	}
 
 	fmt.Fprintf(outFile, "<tr><th scope=\"row\">合計</th> ")
-	fmt.Fprintf(outFile, "<td>%d</td> ", totalSum)
+	fmt.Fprintf(outFile, "<td class=\"totalSum\">%d</td> ", totalSum)
 	for _, station := range stations {
 		if station != "" {
-			fmt.Fprintf(outFile, "<td>%d</td> ", stationSum[station])
+			fmt.Fprintf(outFile, "<td class=\"stationSum\">%d</td> ", stationSum[station])
 		}
 	}
 
