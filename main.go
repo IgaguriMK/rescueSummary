@@ -63,9 +63,10 @@ table th {
 	background: #eee;
 }
 table td {
-	width: 350px;
+	width: 10em;
 	padding: 10px;
 	vertical-align: top;
+	text-align: right;
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
 }
@@ -95,7 +96,7 @@ table td {
 			}
 			cnt, ok := countMap[station][day]
 			if ok {
-				fmt.Fprintf(outFile, "<td allign=\"right\">%d</td> ", cnt)
+				fmt.Fprintf(outFile, "<td>%d</td> ", cnt)
 			} else {
 				fmt.Fprintf(outFile, "<td></td> ")
 			}
