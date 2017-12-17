@@ -3,3 +3,4 @@ rescueSummary
 target/
 
 *.log
+*.html
