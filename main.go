@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -48,33 +49,46 @@ table {
 	border-spacing: 0;
 	text-align: left;
 	line-height: 1.5;
-	border-top: 1px solid #ccc;
-	border-left: 1px solid #ccc;
+	border-top: 1px solid #bbb;
+	border-left: 1px solid #bbb;
 }
 table th {
-	width: 150px;
+	min-width: 5em;
 	padding: 10px;
 	font-weight: bold;
 	vertical-align: top;
-	border-right: 1px solid #ccc;
-	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
 	border-top: 1px solid #fff;
 	border-left: 1px solid #fff;
-	background: #eee;
+	background: #ccc;
 }
 table td {
-	width: 350px;
+	min-width: 5em;
 	padding: 10px;
 	vertical-align: top;
+	text-align: right;
 	border-right: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
+}
+
+td.daySum {
+	background-color: #eeeeee;
+}
+
+td.stationSum {
+	background-color: #eeeeee;
+}
+
+td.totalSum {
+	background-color: #eedddd;
 }
 </style>
 </head>
 <body>
 `,
 		now)
-	fmt.Fprint(outFile, "<table>\n<tr>\n<th>日付</th>")
+	fmt.Fprint(outFile, "<table>\n<tr> <th>日付</th> <th>合計</th> ")
 
 	for _, station := range stations {
 		if station != "" {
@@ -83,11 +97,17 @@ table td {
 	}
 	fmt.Fprintln(outFile, "</tr>")
 
+	totalSum := 0
+	stationSum := make(map[string]int)
+
 	for _, day := range days {
 		if day == "" {
 			continue
 		}
 		fmt.Fprintf(outFile, "<tr><th scope=\"row\">%s</th> ", day)
+
+		var dayOut bytes.Buffer
+		daySum := 0
 
 		for _, station := range stations {
 			if station == "" {
@@ -95,13 +115,27 @@ table td {
 			}
 			cnt, ok := countMap[station][day]
 			if ok {
-				fmt.Fprintf(outFile, "<td allign=\"right\">%d</td> ", cnt)
+				fmt.Fprintf(&dayOut, "<td>%d</td> ", cnt)
+				daySum += cnt
+				stationSum[station] += cnt
 			} else {
-				fmt.Fprintf(outFile, "<td></td> ")
+				fmt.Fprintf(&dayOut, "<td></td> ")
 			}
 		}
 
+		totalSum += daySum
+		fmt.Fprintf(outFile, "<td class=\"daySum\">%d</td> ", daySum)
+		fmt.Fprint(outFile, dayOut.String())
+
 		fmt.Fprintln(outFile, "</tr>")
+	}
+
+	fmt.Fprintf(outFile, "<tr><th scope=\"row\">合計</th> ")
+	fmt.Fprintf(outFile, "<td class=\"totalSum\">%d</td> ", totalSum)
+	for _, station := range stations {
+		if station != "" {
+			fmt.Fprintf(outFile, "<td class=\"stationSum\">%d</td> ", stationSum[station])
+		}
 	}
 
 	fmt.Fprintln(outFile, "</table>\n</body>\n</html>")
