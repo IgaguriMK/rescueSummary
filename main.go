@@ -85,6 +85,9 @@ table td {
 	}
 	fmt.Fprintln(outFile, "</tr>")
 
+	totalSum := 0
+	stationSum := make(map[string]int)
+
 	for _, day := range days {
 		if day == "" {
 			continue
@@ -102,15 +105,25 @@ table td {
 			if ok {
 				fmt.Fprintf(&dayOut, "<td>%d</td> ", cnt)
 				daySum += cnt
+				stationSum[station] += cnt
 			} else {
 				fmt.Fprintf(&dayOut, "<td></td> ")
 			}
 		}
 
+		totalSum += daySum
 		fmt.Fprintf(outFile, "<td>%d</td> ", daySum)
 		fmt.Fprint(outFile, dayOut.String())
 
 		fmt.Fprintln(outFile, "</tr>")
+	}
+
+	fmt.Fprintf(outFile, "<tr><th scope=\"row\">合計</th> ")
+	fmt.Fprintf(outFile, "<td>%d</td> ", totalSum)
+	for _, station := range stations {
+		if station != "" {
+			fmt.Fprintf(outFile, "<td>%d</td> ", stationSum[station])
+		}
 	}
 
 	fmt.Fprintln(outFile, "</table>\n</body>\n</html>")
