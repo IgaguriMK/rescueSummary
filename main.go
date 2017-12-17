@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"log"
 	"os"
@@ -52,7 +53,7 @@ table {
 	border-left: 1px solid #ccc;
 }
 table th {
-	width: 150px;
+	min-width: 5em;
 	padding: 10px;
 	font-weight: bold;
 	vertical-align: top;
@@ -63,7 +64,7 @@ table th {
 	background: #eee;
 }
 table td {
-	width: 10em;
+	min-width: 5em;
 	padding: 10px;
 	vertical-align: top;
 	text-align: right;
@@ -75,7 +76,7 @@ table td {
 <body>
 `,
 		now)
-	fmt.Fprint(outFile, "<table>\n<tr>\n<th>日付</th>")
+	fmt.Fprint(outFile, "<table>\n<tr> <th>日付</th> <th>合計</th> ")
 
 	for _, station := range stations {
 		if station != "" {
@@ -90,17 +91,24 @@ table td {
 		}
 		fmt.Fprintf(outFile, "<tr><th scope=\"row\">%s</th> ", day)
 
+		var dayOut bytes.Buffer
+		daySum := 0
+
 		for _, station := range stations {
 			if station == "" {
 				continue
 			}
 			cnt, ok := countMap[station][day]
 			if ok {
-				fmt.Fprintf(outFile, "<td>%d</td> ", cnt)
+				fmt.Fprintf(&dayOut, "<td>%d</td> ", cnt)
+				daySum += cnt
 			} else {
-				fmt.Fprintf(outFile, "<td></td> ")
+				fmt.Fprintf(&dayOut, "<td></td> ")
 			}
 		}
+
+		fmt.Fprintf(outFile, "<td>%d</td> ", daySum)
+		fmt.Fprint(outFile, dayOut.String())
 
 		fmt.Fprintln(outFile, "</tr>")
 	}
